@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPS</title>
+</head>
+<body>
+    
+</body>
+
+<script>
+    const counter = (function() {
+        const values = {
+            playerWin: 0,
+            playerTie: 0,
+            playerLose: 0
+        }
+        const increment = (selectVal) => {
+            values[selectVal]++
+        }
+        return {
+            returnInc(val) {
+                increment(val)
+            },
+            returnValues() {
+                return values
+            }
+        }
+    })()
+
+    const cpuPlay = () => {
+        const actions = ["rock", "paper", "scissors"]
+        return actions[Math.floor(Math.random() * actions.length)]
+    }
+
+    const playGame = (playerSelection, cpuSelection) => {
+         const logic = {
+             rock: {
+                 name: "rock",
+                 beats: "scissors"
+             },
+             paper: {
+                 name: "paper",
+                 beats: "rock",
+             },
+             scissors: {
+                 name: "scissors",
+                 beats: "paper"
+             }
+         }
+         const playerState = {
+             win: "playerWin",
+             tie: "playerTie",
+             lose: "playerLose"
+         }
+         if (logic[playerSelection].beats === cpuSelection) {
+             counter.returnInc(playerState.win)
+             return `you win, ${playerSelection} beats ${cpuSelection}`
+         }
+         if (playerSelection === cpuSelection) {
+             counter.returnInc(playerState.tie)
+             return `tie (you picked ${playerSelection}, cpu picked ${cpuSelection}`
+         }
+         if (logic[cpuSelection].beats === playerSelection) {
+             counter.returnInc(playerState.lose)
+             return `you lose, ${cpuSelection} beats ${playerSelection}`
+         }
+    }
+
+    const game = (rounds) => {
+        for (let i = 0; i < rounds; i++) {
+            let playerPrompt = prompt("ro-sham-bo").toLowerCase();
+            console.log(playGame(playerPrompt, cpuPlay()))
+        }
+        console.log(calculateScore())
+        console.log(displayWinner())
+    }
+
+    const calculateScore = () => {
+        const {
+            playerWin,
+            playerTie,
+            playerLose
+        } = counter.returnValues()
+        return `final score: ${playerWin} - ${playerLose} (${playerTie} tie(s))`
+    }
+
+    const displayWinner = () => {
+        const {
+            playerWin,
+            playerTie,
+            playerLose
+        } = counter.returnValues()
+        if (playerWin === playerLose) return "it's a tie"
+        if (playerWin > playerLose) return "you win"
+        if (playerWin < playerLose) return "you lost"
+    }
+
+    game(2)
+    
+</script>
+</html>
